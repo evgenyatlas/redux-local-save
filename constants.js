@@ -1,0 +1,2 @@
+export const SAVE_NAME = '__REDUX-LOCAL-SAVE'
+export const SAVE_STORAGE = `${SAVE_NAME}_SAVE_STORAGE`

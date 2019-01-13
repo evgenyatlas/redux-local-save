@@ -1,0 +1,10 @@
+{
+  "name": "redux-local-save",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {},
+  "keywords": [],
+  "author": "Jeckyhit",
+  "license": "ISC"
+}

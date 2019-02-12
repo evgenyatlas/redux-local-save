@@ -28,12 +28,12 @@ export function createLocalSaveMiddleware(options) {
                     if (!saveAction.type && saveAction !== action.type || saveAction.type && saveAction.type !== action.type)
                         return false
 
-                    //throttle is an option that specifies how long the action should not come again for save
-                    if (saveAction.throttle === undefined)
+                    //debounce is an option that specifies how long the action should not come again for save
+                    if (saveAction.debounce === undefined)
                         return true
 
                     if (saveAction._timerId) clearTimeout(saveAction._timerId)
-                    saveAction._timerId = setTimeout(saveCurrState, saveAction.throttle)
+                    saveAction._timerId = setTimeout(saveCurrState, saveAction.debounce)
 
                 }) ||/* default action to save -> */action.type === SAVE_STORAGE)
                     saveInStorage(store.getState())

@@ -12,8 +12,18 @@ export function loadStorage(saveName = '') {
 }
 
 export function saveInStorage(state, saveName = '') {
-    console.log('saveInStorage', getSaveName(saveName))
     localStorage.setItem(getSaveName(saveName), JSON.stringify(state))
+}
+
+export function saveCurrState(saveInStorage, getState, saveName) {
+    saveInStorage(getState(), saveName)
+}
+
+export function saveCurrStateDebug(saveInStorage, getState, saveName) {
+    console.log('-----SAVE_STATE-----' + saveName)
+    console.log(getState())
+    saveInStorage(getState(), saveName)
+    console.log('-------------------')
 }
 
 function getSaveName(name) {

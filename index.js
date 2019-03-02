@@ -1,4 +1,4 @@
-import { saveInStorage, loadStorage } from "./utils";
+import { saveInStorage, loadStorage, saveCurrStateDebug, saveCurrState } from "./utils";
 import { SAVE_NAME, SAVE_STORAGE } from './constants'
 
 /**
@@ -9,6 +9,9 @@ import { SAVE_NAME, SAVE_STORAGE } from './constants'
 export default function createLocalSaveMiddleware(options) {
     /*Default options*/
     options = options !== undefined ? options : {}
+    //there are two types of "saveAction"
+    //1. DUMB: [TEST_ACTION_1, TEST_ACTION_2] (just a string means type action)
+    //2 SMART: [{type: TEST_ACTION_1}, {type: TEST_ACTION_2, debounce: 1000}] (for example, it is possible to pass additional parameters)
     options.saveActions = options.saveActions !== undefined ? options.saveActions : []
     options.saveName = options.saveName ? options.saveName : ''
     options.isDebug = !!options.isDebug
@@ -16,16 +19,10 @@ export default function createLocalSaveMiddleware(options) {
 
     return store => {
 
-        const saveCurrState = options.isDebug ?
-            () => {
-                console.log('-----SAVE_STATE-----' + options.saveName)
-                console.log(store.getState())
-                saveInStorage(store.getState(), options.saveName)
-                console.log('-------------------')
-            }
+        const _saveCurrState = options.isDebug ?
+            saveCurrStateDebug.bind(null, saveInStorage, store.getState, options.saveName)
             :
-            () => saveInStorage(store.getState(), options.saveName)
-
+            saveCurrState.bind(null, saveInStorage, store.getState, options.saveName)
 
         return next => {
             return action => {
@@ -33,7 +30,7 @@ export default function createLocalSaveMiddleware(options) {
                 if (options.saveActions.some(saveAction => {
                     //such a check, because we get two types of actions
                     //1. DUMB: [TEST_ACTION_1, TEST_ACTION_2] (just a string means type action)
-                    //2 SMART: [{type: TEST_ACTION_1}, {type: TEST_ACTION_2, debounce: 1000}] (for example, it is possible to pass additional parameters)
+                    //2 SMART: [{type: TEST_ACTION_1, throttle: 500}, {type: TEST_ACTION_2, debounce: 1000}] (for example, it is possible to pass additional parameters)
                     if (!saveAction.type && saveAction !== action.type || saveAction.type && saveAction.type !== action.type)
                         return false
 
@@ -42,11 +39,11 @@ export default function createLocalSaveMiddleware(options) {
                         return true
 
                     if (saveAction._timerId) clearTimeout(saveAction._timerId)
-                    saveAction._timerId = setTimeout(saveCurrState, saveAction.debounce)
+                    saveAction._timerId = setTimeout(_saveCurrState, saveAction.debounce)
 
                     return false
                 }) ||/* default action to save -> */action.type === SAVE_STORAGE)
-                    saveCurrState()
+                    _saveCurrState()
                 return result
             }
         }

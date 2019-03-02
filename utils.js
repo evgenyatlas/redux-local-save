@@ -13,6 +13,5 @@ export function loadStorage() {
 }
 
 export function saveInStorage(state, saveName = SAVE_NAME) {
-    console.log('SAVING!')
     localStorage.setItem(saveName, JSON.stringify(state))
 }

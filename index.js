@@ -6,11 +6,10 @@ import { SAVE_NAME, SAVE_STORAGE } from './constants'
  * @param  {Options} options.
  * @return {function} store => next => action 
  */
-export function createLocalSaveMiddleware(options) {
+export default function createLocalSaveMiddleware(options) {
     /*Default options*/
     options = options !== undefined ? options : {}
     options.saveActions = options.saveActions !== undefined ? options.saveActions : []
-
 
     return store => {
 
@@ -24,7 +23,7 @@ export function createLocalSaveMiddleware(options) {
                 if (options.saveActions.some(saveAction => {
                     //such a check, because we get two types of actions
                     //1. DUMB: [TEST_ACTION_1, TEST_ACTION_2] (just a string means type action)
-                    //2 SMART: [{type: TEST_ACTION_1}, {type: TEST_ACTION_2, throttle: 1000}] (for example, it is possible to pass additional parameters)
+                    //2 SMART: [{type: TEST_ACTION_1}, {type: TEST_ACTION_2, debounce: 1000}] (for example, it is possible to pass additional parameters)
                     if (!saveAction.type && saveAction !== action.type || saveAction.type && saveAction.type !== action.type)
                         return false
 

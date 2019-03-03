@@ -22,5 +22,6 @@
     "saving state"
   ],
   "author": "Jeckyhit",
-  "license": "ISC"
+  "license": "MIT",
+  "repository": "github:jeckyhit/redux-local-save"
 }

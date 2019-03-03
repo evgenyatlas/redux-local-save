@@ -1,4 +1,4 @@
-# redux-local-save [![NPM version](https://badge.fury.io/js/get-server-response-time.svg)](https://npmjs.org/package/get-server-response-time)
+# redux-local-save [![NPM version](https://badge.fury.io/js/redux-local-save.svg)](https://npmjs.org/package/get-server-response-time)
 
 > Module for store state saving
 

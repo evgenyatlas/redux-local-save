@@ -1,5 +1,8 @@
 import { saveInStorage, loadStorage, saveCurrStateDebug, saveCurrState } from "./utils";
 import { SAVE_NAME, SAVE_STORAGE } from './constants'
+//extensions
+import debounce from "./extension/debounce";
+import throttle from './extension/throttle';
 
 /**
  * Returns a middleware for redux store
@@ -35,11 +38,14 @@ export default function createLocalSaveMiddleware(options) {
                         return false
 
                     //debounce is an option that specifies how long the action should not come again for save
-                    if (saveAction.debounce === undefined)
+                    //throttle is an options that 
+                    if (saveAction.debounce === undefined && saveAction.throttle === undefined)
                         return true
 
-                    if (saveAction._timerId) clearTimeout(saveAction._timerId)
-                    saveAction._timerId = setTimeout(_saveCurrState, saveAction.debounce)
+                    if (saveAction.debounce)
+                        debounce(saveAction, _saveCurrState)
+                    else
+                        throttle(saveAction, _saveCurrState)
 
                     return false
                 }) ||/* default action to save -> */action.type === SAVE_STORAGE)

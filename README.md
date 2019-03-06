@@ -2,7 +2,7 @@
 
 > Module for store state saving
 
-## Installation
+## Installation and use
 
 ```sh
 $ npm install --save redux-local-save
@@ -30,6 +30,52 @@ const store = createStore(
         applyMiddleware(localSaveMiddleware)
     )
 ```
+
+## If the store you have more than one?
+### Specify the storage name in options for createLocalSaveMiddleware and loadStorage
+```js
+//userStore.js
+...
+const localSaveMiddleware = createLocalSaveMiddleware({
+        //We specify actions which will start saving
+        saveName: 'userStore'
+    })
+const store = createStore(
+        reducer,
+        loadStorage('userStore'),
+        applyMiddleware(localSaveMiddleware)
+    )
+...
+//animalStore.js
+...
+const localSaveMiddleware = createLocalSaveMiddleware({
+        //We specify actions which will start saving
+        saveName: 'animalStore'
+    })
+const store = createStore(
+        reducer,
+        loadStorage('animalStore'),
+        applyMiddleware(localSaveMiddleware)
+    )
+...
+```
+
+## Features
+
+### We specify what action will start saving
+```js
+const localSaveMiddleware = createLocalSaveMiddleware({
+        //there are two types of "saveAction"
+        //1. DUMB: [TEST_ACTION_1, TEST_ACTION_2] (just a CONST (:string) means type action)
+        //2. SMART: [{type: TEST_ACTION_1}, {type: TEST_ACTION_2, debounce: 1000}] (for example, it is possible to pass additional parameters)
+        saveActions: [
+            SEND_CURRENT_WORD,
+            {type: SEND_PREVIOUS_WORD},
+        ]
+    })
+```
+
+###//
 
 
 ## License

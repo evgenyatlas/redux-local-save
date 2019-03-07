@@ -66,16 +66,16 @@ const store = createStore(
 ```js
 const localSaveMiddleware = createLocalSaveMiddleware({
         //there are two types of "saveAction"
-        //1. DUMB: [TEST_ACTION_1, TEST_ACTION_2] (just a CONST (:string) means type action)
-        //2. SMART: [{type: TEST_ACTION_1}, {type: TEST_ACTION_2, debounce: 1000}] (for example, it is possible to pass additional parameters)
         saveActions: [
+            //1. DUMB
             SEND_CURRENT_WORD,
-            {type: SEND_PREVIOUS_WORD},
+            //2. SMART (for example, added a parameter that defer saving (for 200 ms) after each action)
+            {type: SEND_PREVIOUS_WORD, debounce: 200},
         ]
     })
 ```
 
-###//
+### DEBOUNCE AND THROTTLE
 
 
 ## License

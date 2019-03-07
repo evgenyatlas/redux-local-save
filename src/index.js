@@ -34,12 +34,28 @@ export default function createLocalSaveMiddleware(options) {
                     //such a check, because we get two types of actions
                     //1. DUMB: [TEST_ACTION_1, TEST_ACTION_2] (just a string means type action)
                     //2 SMART: [{type: TEST_ACTION_1, throttle: 500}, {type: TEST_ACTION_2, debounce: 1000}] (for example, it is possible to pass additional parameters)
-                    if (!saveAction.type && saveAction !== action.type || saveAction.type && saveAction.type !== action.type)
+                    if (
+                        !saveAction.type && saveAction !== action.type
+                        ||
+                        saveAction.type && saveAction.type !== action.type
+                    )
+                        return false
+
+                    //condition is an option that with a positive call, it will be saved
+                    if (
+                        saveAction.condition
+                        &&
+                        !saveAction.condition(action)
+                    )
                         return false
 
                     //debounce is an option that specifies how long the action should not come again for save
                     //throttle is an options that 
-                    if (saveAction.debounce === undefined && saveAction.throttle === undefined)
+                    if (
+                        saveAction.debounce === undefined
+                        &&
+                        saveAction.throttle === undefined
+                    )
                         return true
 
                     if (saveAction.debounce)
